@@ -15,7 +15,7 @@ window.addEventListener('load', () => {
 
       const img = document.createElement('img');
       img.draggable = false;
-      img.src = `https://raw.githubusercontent.com/freegamesforchromebooks/${ver?.name}/refs/heads/main/img/mainmenu.png`;
+      img.src = `https://raw.githubusercontent.com/freegamesforchromebooks/${ver?.name}/refs/heads/main/mainmenu.png`;
 
       const a = document.createElement('a');
       a.textContent = ver?.name;
