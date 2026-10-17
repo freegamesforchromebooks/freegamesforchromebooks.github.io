@@ -14,8 +14,13 @@ window.addEventListener('load', () => {
       });
 
       const img = document.createElement('img');
-      img.draggable = false;
-      img.src = `https://raw.githubusercontent.com/freegamesforchromebooks/${ver?.name}/refs/heads/main/mainmenu.png`;
+img.draggable = false;
+// Try 'main' first, and if it errors out, switch to 'master'
+img.src = `https://raw.githubusercontent.com/freegamesforchromebooks/${ver?.name}/refs/heads/main/mainmenu.png`;
+img.onerror = () => {
+  img.onerror = null; // Prevent infinite loop if master also fails
+  img.src = `https://raw.githubusercontent.com/freegamesforchromebooks/placeholder/refs/heads/main/placeholder.png`;
+};
 
       const a = document.createElement('a');
       a.textContent = ver?.name;
