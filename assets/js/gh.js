@@ -1,4 +1,4 @@
-const GITHUB_NAME = 'EaglerPorts';
+const GITHUB_NAME = 'freegamesforchromebooks';
 
 async function fetchRepos () {
   const response = await fetch(`https://api.github.com/users/${GITHUB_NAME}/repos`);
