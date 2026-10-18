@@ -1,5 +1,7 @@
 window.addEventListener('load', () => {
   fetchRepos().then(data => {
+    if (!data || data.length === 0) return;
+    
     const user = data[0]?.owner;
     document.querySelector('.header img').src = user?.avatar_url;
     document.querySelector('.header h1').textContent = user?.login;
@@ -16,21 +18,18 @@ window.addEventListener('load', () => {
       const img = document.createElement('img');
       img.draggable = false;
       
-      // Try 'main' branch first[cite: 1]
-      const mainUrl = `https://raw.githubusercontent.com/freegamesforchromebooks/${ver?.name}/refs/heads/main/mainmenu.png`;
-      const masterUrl = `https://raw.githubusercontent.com/freegamesforchromebooks/${ver?.name}/refs/heads/master/mainmenu.png`;
+      // Dynamically use the repo's real default branch from the GitHub API (falls back to 'main')
+      const branch = ver?.default_branch || 'main';
+      const imageUrl = `https://raw.githubusercontent.com/freegamesforchromebooks/${ver?.name}/${branch}/mainmenu.png`;
       
-      // Your custom placeholder image URL
+      // Your exact requested placeholder image URL
       const placeholderUrl = 'https://raw.githubusercontent.com/freegamesforchromebooks/placeholder/refs/heads/main/placeholder.png';
 
-      img.src = mainUrl;
-      
-      // Fallback chain: main -> master -> custom placeholder
+      img.src = imageUrl;
+
+      // Automatically fallback to your placeholder if the image returns a 404
       img.onerror = () => {
-        img.onerror = () => {
-          img.src = placeholderUrl;
-        };
-        img.src = masterUrl;
+        img.src = placeholderUrl;
       };
 
       const a = document.createElement('a');
