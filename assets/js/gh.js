@@ -2,10 +2,18 @@ const GITHUB_NAME = 'freegamesforchromebooks';
 
 async function fetchRepos () {
   const response = await fetch(`https://api.github.com/users/${GITHUB_NAME}/repos`);
-  return await sortRepos(await response.json());
+  const data = await response.json();
+  console.log("Fetched repos from GitHub:", data); // Check your F12 console to see if this prints an array!
+  return await sortRepos(data);
 }
 
 async function sortRepos (repos) {
+  // If repos is not an array, rate limit was likely hit
+  if (!Array.isArray(repos)) {
+    console.error("GitHub API Error or Rate Limit Exceeded:", repos);
+    return [];
+  }
+
   const type = prefix => ({
     '': 6,
     b: 5,
@@ -17,7 +25,7 @@ async function sortRepos (repos) {
   })[prefix?.toLowerCase() || ''] ?? -1;
 
   const parse = name => {
-    const m = name.match(/^((?:inf-|in-|rd-|c|b|a))?(\d+)\.(\d+)(?:[._-](\d+))?(?:[._-](\d+))?(?:[._-][A-Za-z][\w.-]*)?$/i);
+    const m = name.match(/^((?:inf-|in-|rd-|c|b|a))?(\d+)\.(\d+)(?:[._-](\d+))?(?:[._-](\d+))?(?:[._-][A-Za-z][\w.-]*)?\$/i);
     return m
       ? {
           stage: type(m[1]),
@@ -30,7 +38,8 @@ async function sortRepos (repos) {
   };
 
   return repos
-    .filter(r => Array.isArray(r.topics) && r.topics.includes('mcwp'))
+    // Temporarily commented out to test if missing 'mcwp' topic is hiding your repos:
+    // .filter(r => Array.isArray(r.topics) && r.topics.includes('mcwp'))
     .slice()
     .sort(function (a, b) {
       const A = parse(a.name);
