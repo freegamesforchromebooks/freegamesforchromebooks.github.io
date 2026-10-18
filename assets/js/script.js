@@ -26,7 +26,7 @@ window.addEventListener('load', () => {
       img.onerror = () => {
         img.onerror = () => {
           // Replace this URL with your actual placeholder image link if needed
-          img.src = 'https://via.placeholder.com/150?text=No+Image'; 
+          img.src = 'https://raw.githubusercontent.com/freegamesforchromebooks/placeholder/refs/heads/main/placeholder.png'; 
         };
         img.src = masterUrl;
       };
