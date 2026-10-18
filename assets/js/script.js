@@ -1,6 +1,8 @@
 window.addEventListener('load', () => {
   fetchRepos().then(data => {
-    if (!data || data.length === 0) return;
+    if (!data || data.length === 0) {
+      throw new Error("No repositories found! Check if 'mcwp' topic is set on GitHub.");
+    }
     
     const user = data[0]?.owner;
     document.querySelector('.header img').src = user?.avatar_url;
@@ -18,16 +20,13 @@ window.addEventListener('load', () => {
       const img = document.createElement('img');
       img.draggable = false;
       
-      // Dynamically use the repo's real default branch from the GitHub API (falls back to 'main')
       const branch = ver?.default_branch || 'main';
       const imageUrl = `https://raw.githubusercontent.com/freegamesforchromebooks/${ver?.name}/${branch}/mainmenu.png`;
-      
-      // Your exact requested placeholder image URL
       const placeholderUrl = 'https://raw.githubusercontent.com/freegamesforchromebooks/placeholder/refs/heads/main/placeholder.png';
 
       img.src = imageUrl;
 
-      // Automatically fallback to your placeholder if the image returns a 404
+      // If the game's mainmenu.png fails to load, use your placeholder
       img.onerror = () => {
         img.src = placeholderUrl;
       };
@@ -43,8 +42,16 @@ window.addEventListener('load', () => {
     });
   }).catch(err => {
     console.error(err);
-    const h1 = document.querySelector('h1.preload');
-    h1.textContent = err.stack;
+    // This will print any error message directly onto your phone screen in red text:
+    const h1 = document.querySelector('h1.preload') || document.createElement('h1');
+    h1.className = 'preload';
+    h1.textContent = "Error: " + err.message;
     h1.style.color = 'red';
+    h1.style.fontSize = '18px';
+    h1.style.padding = '20px';
+    if (!document.body.contains(h1)) {
+      document.body.appendChild(h1);
+    }
+    document.body.classList.remove('preload');
   });
 });
