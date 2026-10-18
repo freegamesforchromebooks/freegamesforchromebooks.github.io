@@ -14,13 +14,22 @@ window.addEventListener('load', () => {
       });
 
       const img = document.createElement('img');
-img.draggable = false;
-// Try 'main' first, and if it errors out, switch to 'master'
-img.src = `https://raw.githubusercontent.com/freegamesforchromebooks/${ver?.name}/refs/heads/main/mainmenu.png`;
-img.onerror = () => {
-  img.onerror = null; // Prevent infinite loop if master also fails
-  img.src = `https://raw.githubusercontent.com/freegamesforchromebooks/placeholder/refs/heads/main/placeholder.png`;
-};
+      img.draggable = false;
+      
+      // Try 'main' branch first[cite: 1]
+      const mainUrl = `https://raw.githubusercontent.com/freegamesforchromebooks/${ver?.name}/refs/heads/main/mainmenu.png`;
+      const masterUrl = `https://raw.githubusercontent.com/freegamesforchromebooks/${ver?.name}/refs/heads/master/mainmenu.png`;
+
+      img.src = mainUrl;
+      
+      // Fallback chain: if 'main' fails, try 'master'. If 'master' also fails, use your placeholder image.
+      img.onerror = () => {
+        img.onerror = () => {
+          // Replace this URL with your actual placeholder image link if needed
+          img.src = 'https://via.placeholder.com/150?text=No+Image'; 
+        };
+        img.src = masterUrl;
+      };
 
       const a = document.createElement('a');
       a.textContent = ver?.name;
