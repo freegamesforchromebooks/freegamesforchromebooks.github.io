@@ -15,18 +15,20 @@ window.addEventListener('load', () => {
 
       const img = document.createElement('img');
       img.draggable = false;
-      
-      // Try 'main' branch first[cite: 1]
-      const mainUrl = `https://raw.githubusercontent.com/freegamesforchromebooks/${ver?.name}/refs/heads/main/mainmenu.png`;
-      const masterUrl = `https://raw.githubusercontent.com/freegamesforchromebooks/${ver?.name}/refs/heads/master/mainmenu.png`;
+
+      // Try the 'main' branch first
+      const mainUrl = `https://raw.githubusercontent.com/freegamesforchromebooks/${ver?.name}/main/mainmenu.png`;
+      // Backup branch 'master' in case the repo uses that instead
+      const masterUrl = `https://raw.githubusercontent.com/freegamesforchromebooks/${ver?.name}/master/mainmenu.png`;
+      // Your placeholder fallback image
+      const placeholderUrl = 'https://raw.githubusercontent.com/freegamesforchromebooks/placeholder/refs/heads/main/placeholder.png';
 
       img.src = mainUrl;
-      
-      // Fallback chain: if 'main' fails, try 'master'. If 'master' also fails, use your placeholder image.
+
+      // Fallback chain: main -> master -> placeholder
       img.onerror = () => {
         img.onerror = () => {
-          // Replace this URL with your actual placeholder image link if needed
-          img.src = 'https://raw.githubusercontent.com/freegamesforchromebooks/placeholder/refs/heads/main/placeholder.png'; 
+          img.src = placeholderUrl;
         };
         img.src = masterUrl;
       };
